@@ -15,10 +15,12 @@ public class Player {
         return id;
     }
 
-    //    public String pickLetter() {
-//
-//
-//    }
+    //method to send message to all player (when player leaves, all players will know)
+    public void sendMessage(String message){
+
+        playerHandler.sendMessageToPlayer(message);
+
+    }
 
 
     public Player_Handler getPlayerHandler() {

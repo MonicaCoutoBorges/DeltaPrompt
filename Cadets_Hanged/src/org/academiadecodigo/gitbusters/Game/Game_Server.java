@@ -72,23 +72,33 @@ public class Game_Server {
 
             if (player.getId() == 1) {
 
-                player.getPlayerHandler().getOut().write("Waiting for player..." + "\n");
+                player.getPlayerHandler().getOut().write(Message.WELCOME + "\n");
                 player.getPlayerHandler().getOut().flush();
 
+                player.getPlayerHandler().getOut().write(Message.WAITING_FOR_PLAYER + "\n");
+                player.getPlayerHandler().getOut().flush();
+
+                // } else {
             }
+            if (player.getId() == 2) {
 
-
-            /*System.out.println(Message.NEW_CONNECTION + clientSocket.getInetAddress().getHostAddress());
-
-            System.out.println(Message.WELCOME);*/
-
-
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                game.start();
+            }
         }
+
+
+        serverSocket.close();
 
         ACTIVEPLAYERS = 1;
 
 
     }
+
 
 
 }

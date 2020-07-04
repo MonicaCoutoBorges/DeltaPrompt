@@ -25,10 +25,45 @@ public class Player_Handler implements Runnable {
     }
 
 
-//    public String pickWord (){
-//
-//    }
+    public String pickWord(String word) {
 
+        String newWord = "";
+
+        try {
+            out.write(word);
+            out.flush();
+            newWord = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return newWord.toLowerCase();
+    }
+
+
+    public String pickChar(String word) {
+
+        String newChar = "";
+
+        try {
+            out.write(word);
+            out.flush();
+            newChar = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return newChar.toLowerCase();
+    }
+
+    public void sendMessageToPlayer(String message){
+
+        try {
+            out.write(message);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public BufferedReader getIn() {
         return in;
@@ -37,6 +72,7 @@ public class Player_Handler implements Runnable {
     public BufferedWriter getOut() {
         return out;
     }
+
 
     @Override
     public void run() {
