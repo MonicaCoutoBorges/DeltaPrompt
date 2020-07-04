@@ -1,7 +1,6 @@
 package org.academiadecodigo.gitbusters.Game;
 
 import org.academiadecodigo.bootcamp.Prompt;
-import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.gitbusters.Player.Player;
 import org.academiadecodigo.gitbusters.Player.Player_Handler;
 import org.academiadecodigo.gitbusters.Utility.Message;
@@ -21,33 +20,22 @@ public class Game_Server {
     private Prompt prompt;
     private final int nrOfPlayers = 2;
     private static int ACTIVEPLAYERS = 1;
-    ExecutorService fixedPool;
+    private ExecutorService fixedPool;
 
     public Game_Server() {
-
         prompt = new Prompt(System.in, System.out);
-
         fixedPool = Executors.newFixedThreadPool(nrOfPlayers);
-
     }
-
 
     public static void main(String[] args) throws IOException {
-
         Game_Server game_server = new Game_Server();
-
         game_server.start();
-
-
     }
 
-
     public void start() throws IOException {
-
         ServerSocket serverSocket = null;
 
         Game game = new Game(nrOfPlayers);
-
 
         serverSocket = new ServerSocket(port);
         System.out.println(Message.SERVER_ON);
@@ -77,8 +65,6 @@ public class Game_Server {
 
                 player.getPlayerHandler().getOut().write(Message.WAITING_FOR_PLAYER + "\n");
                 player.getPlayerHandler().getOut().flush();
-
-                // } else {
             }
             if (player.getId() == 2) {
 
@@ -90,15 +76,8 @@ public class Game_Server {
                 game.start();
             }
         }
-
-
         serverSocket.close();
 
         ACTIVEPLAYERS = 1;
-
-
     }
-
-
-
 }

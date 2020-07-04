@@ -16,12 +16,11 @@ public class Player {
     }
 
     //method to send message to all player (when player leaves, all players will know)
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
 
         playerHandler.sendMessageToPlayer(message);
 
     }
-
 
     public Player_Handler getPlayerHandler() {
         return playerHandler;

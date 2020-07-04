@@ -1,8 +1,5 @@
 package org.academiadecodigo.gitbusters.Player;
 
-import org.academiadecodigo.bootcamp.Prompt;
-
-
 import java.io.*;
 import java.net.Socket;
 
@@ -23,7 +20,6 @@ public class Player_Handler implements Runnable {
         }
 
     }
-
 
     public String pickWord(String word) {
 
@@ -55,7 +51,7 @@ public class Player_Handler implements Runnable {
         return newChar.toLowerCase();
     }
 
-    public void sendMessageToPlayer(String message){
+    public void sendMessageToPlayer(String message) {
 
         try {
             out.write(message);
