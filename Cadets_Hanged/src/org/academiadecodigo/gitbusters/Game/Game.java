@@ -40,7 +40,7 @@ public class Game {
 
         prompt = new Prompt(System.in,System.out);
 
-        //mandar msg ao tony
+        //mandar msg ao tony , fica a "espera" ate  o -> wordChossed <- passar a true ( linha 50)
         tonyGay.sendMessage("Wait for your opponent..." + "\n");
 
         //pede a palavra secreta ao intellij e guarda-a na variavel choosedWord e printa-a na consola (só para teste)
@@ -52,7 +52,8 @@ public class Game {
 
         //se houver palavra, começar a logica.
             if (wordChossed = true){
-                tonyGay.sendMessage("Your opponent already choosed the word" + "\n");
+
+                tonyGay.sendMessage("Your opponent already choosed the word \n \n");
 
                 //aqui começar a logica -> meter ele a ver os ------- etc etc
 
