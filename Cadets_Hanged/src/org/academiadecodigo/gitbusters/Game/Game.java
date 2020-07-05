@@ -8,6 +8,8 @@ import org.academiadecodigo.gitbusters.Player.Player_Handler;
 import org.academiadecodigo.gitbusters.Utility.Message;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class Game {
@@ -25,6 +27,9 @@ public class Game {
     private boolean isCorrect;
     private Player player;
     private int numeroJogadores = 2;
+    private String choosedWord;
+    private Player_Handler player_handler;
+
 
     //criei este booleano com a intençao de o usar quando o user do intellij clika no enter e já ha uma palavra guardada
     private boolean wordChossed = false;
@@ -38,7 +43,7 @@ public class Game {
         Player tonyGay = players[1];
         //iniciei a prompt
 
-        prompt = new Prompt(System.in,System.out);
+        prompt = new Prompt(System.in, System.out);
 
         //mandar msg ao tony , fica a "espera" ate  o -> wordChossed <- passar a true ( linha 50)
         tonyGay.sendMessage("Wait for your opponent..." + "\n");
@@ -46,29 +51,34 @@ public class Game {
         //pede a palavra secreta ao intellij e guarda-a na variavel choosedWord e printa-a na consola (só para teste)
         StringInputScanner userScanner = new StringInputScanner();
         userScanner.setMessage("Choose one word: ");
-        String choosedWord = prompt.getUserInput(userScanner);
+        choosedWord = prompt.getUserInput(userScanner);
         wordChossed = true;  //quando o user do intellij clica enter e já ha palavra guardada , mudo para true, assim a logica da pessoa que usa a powershell, pára de ver o "waiting for player" e ja pode começar a logiica
-        System.out.println("Word choosed was: "+ choosedWord);
+        System.out.println("Word choosed was: " + choosedWord);
 
         //se houver palavra, começar a logica.
-            if (wordChossed = true){
+        if (wordChossed = true) {
 
-                tonyGay.sendMessage("Your opponent already choosed the word \n \n");
+            tonyGay.sendMessage("Your opponent already choosed the word \n \n");
 
-                //aqui começar a logica -> meter ele a ver os ------- etc etc
+            //aqui começar a logica -> meter ele a ver os ------- etc etc  --> NAO SEI SE ESTÁ CERTO ASSIM <--
 
+            hiddenWord = new char[choosedWord.length()];
+            for (int i = 0; i < choosedWord.length(); i++) {
+                hiddenWord[i] += '-';
             }
-   }
 
-    public void wordToChar() {
-        hiddenWord = new char[guessingWord.length()];
-        for (int i = 0; i < guessingWord.length(); i++) {
-            hiddenWord[i] += '-';
+            //transforma a array de char em string outra vez
+            char[] a = hiddenWord;
+            String str = new String(a);
+            tonyGay.sendMessage("your opponent already choosed one word:   " + str + "\n");
+
+            //Fiquei aqui, nao consigo enviar á powershell "Choose one letter: "  todos os metodos que tentei,
+            //enviam para o intellij em vez da powershell.  tentei prompt , .sendMessage , etc mas nao consegui
         }
-        sendMessageToAll(" " + hiddenWord + maxRounds + Message.GUESSES_LEFT + "\n");
     }
 
     private boolean compareChars(char userInput) {
+
         for (int i = 0; i < guessingWord.length(); i++) {
             if (userInput == guessingWord.charAt(i)) {
                 hiddenWord[i] = userInput;
@@ -79,11 +89,14 @@ public class Game {
     }
 
     public void sendMessageToAll(String message) {
-       // for (Player player : players) {
-            //por aqui uma condição que faça com que não envie sms para o player que enviou (TCP)
-           // player.sendMessage(message);
+        // for (Player player : players) {
+        //por aqui uma condição que faça com que não envie sms para o player que enviou (TCP)
+        // player.sendMessage(message);
         //}
     }
+
+
+
 
     // IMPORTANTE!!! metodo que cria o player recebento o id e o handler. metodo esse que vai ser chamado na main
     //ele na posiçao 1 ,  cria um novo player lá. na posiçao 0 já está o intellij
