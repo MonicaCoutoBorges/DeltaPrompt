@@ -3,6 +3,7 @@ package org.academiadecodigo.gitbusters.Player;
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.string.PasswordInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.gitbusters.Utility.Message;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -28,5 +29,11 @@ public class Player {
 
     public Player_Handler getPlayerHandler() {
         return playerHandler;
+    }
+
+
+    public String pickLetter(){
+
+        return playerHandler.pickChar(Message.PICK_CHAR + "/n");
     }
 }

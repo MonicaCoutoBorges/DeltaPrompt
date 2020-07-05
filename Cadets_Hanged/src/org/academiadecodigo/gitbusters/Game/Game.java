@@ -26,7 +26,6 @@ public class Game {
     private int numberOfRounds = 0;
     private boolean isCorrect;
     private Player player;
-    private int numeroJogadores = 2;
     private String choosedWord;
     private Player_Handler player_handler;
 
@@ -39,46 +38,60 @@ public class Game {
     public void start() throws IOException {
 
         //aqui atribui o player tonyGay a primeira pos da array, o proprio intellij é o [0]
-
         Player tonyGay = players[1];
-        //iniciei a prompt
 
+        //iniciei a prompt
         prompt = new Prompt(System.in, System.out);
 
         //mandar msg ao tony , fica a "espera" ate  o -> wordChossed <- passar a true ( linha 50)
-        tonyGay.sendMessage("Wait for your opponent..." + "\n");
+        tonyGay.sendMessage(Message.WAITING_FOR_PLAYER + "\n");
 
         //pede a palavra secreta ao intellij e guarda-a na variavel choosedWord e printa-a na consola (só para teste)
         StringInputScanner userScanner = new StringInputScanner();
-        userScanner.setMessage("Choose one word: ");
+        userScanner.setMessage(Message.CHOOSE_A_WORD);
         choosedWord = prompt.getUserInput(userScanner);
         wordChossed = true;  //quando o user do intellij clica enter e já ha palavra guardada , mudo para true, assim a logica da pessoa que usa a powershell, pára de ver o "waiting for player" e ja pode começar a logiica
-        System.out.println("Word choosed was: " + choosedWord);
+
+        System.out.println(Message.WORD_CHOSEN + choosedWord);
 
         //se houver palavra, começar a logica.
+        changeWordToChar(tonyGay);
+
+        while (maxRounds > 0){
+
+            tonyGay.pickLetter();
+            tonyGay.getPlayerHandler().pickChar("Sou mexeriqueiro aka Johny");
+            System.out.println("O joao quer saber se isto entrou");
+//            char selectedChar = getPickedChars(tonyGay);
+//            characters.add(selectedChar);
+
+
+        }
+
+    }
+
+
+    private void changeWordToChar(Player players) throws IOException {
+
+
         if (wordChossed = true) {
-
-            tonyGay.sendMessage("Your opponent already choosed the word \n \n");
-
+            players.sendMessage(Message.OPPONENT_CHOSEN_WORD + "\n \n");
             //aqui começar a logica -> meter ele a ver os ------- etc etc  --> NAO SEI SE ESTÁ CERTO ASSIM <--
-
             hiddenWord = new char[choosedWord.length()];
+
             for (int i = 0; i < choosedWord.length(); i++) {
                 hiddenWord[i] += '-';
             }
-
-            //transforma a array de char em string outra vez
             char[] a = hiddenWord;
             String str = new String(a);
-            tonyGay.sendMessage("your opponent already choosed one word:   " + str + "\n");
+            players.sendMessage(str + "\n");
+            players.sendMessage(Message.PICK_CHAR + "\n");
 
-            //Fiquei aqui, nao consigo enviar á powershell "Choose one letter: "  todos os metodos que tentei,
-            //enviam para o intellij em vez da powershell.  tentei prompt , .sendMessage , etc mas nao consegui
         }
+
     }
 
     private boolean compareChars(char userInput) {
-
         for (int i = 0; i < guessingWord.length(); i++) {
             if (userInput == guessingWord.charAt(i)) {
                 hiddenWord[i] = userInput;
@@ -95,13 +108,26 @@ public class Game {
         //}
     }
 
-
-
-
     // IMPORTANTE!!! metodo que cria o player recebento o id e o handler. metodo esse que vai ser chamado na main
     //ele na posiçao 1 ,  cria um novo player lá. na posiçao 0 já está o intellij
-
     void createPlayer(int playerId, Player_Handler player_handler) {
         players[playerId] = new Player(player_handler);
     }
+
+    private char getPickedChars(Player players) {
+
+        String wordPicked = players.pickLetter();
+        char charPicked = wordPicked.charAt(0);
+
+        for (Character character : characters) {
+            if (character.compareTo(character) == 0) {
+                sendMessageToAll(character + Message.ALREADY_IN_USE + "/n");
+                charPicked = getPickedChars(players);
+            }
+        }
+        return charPicked;
+    }
+
+
 }
+

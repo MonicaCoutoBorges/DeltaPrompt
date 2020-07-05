@@ -52,6 +52,8 @@ public class Player_Handler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println(newChar);
         return newChar.toLowerCase();
     }
 
