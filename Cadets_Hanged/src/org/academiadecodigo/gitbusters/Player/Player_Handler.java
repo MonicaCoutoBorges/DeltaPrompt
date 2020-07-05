@@ -1,5 +1,7 @@
 package org.academiadecodigo.gitbusters.Player;
 
+import org.academiadecodigo.gitbusters.Utility.Message;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -13,8 +15,10 @@ public class Player_Handler implements Runnable {
         this.clientSocket = clientSocket;
 
         try {
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,6 +72,7 @@ public class Player_Handler implements Runnable {
     public BufferedWriter getOut() {
         return out;
     }
+
 
 
     @Override

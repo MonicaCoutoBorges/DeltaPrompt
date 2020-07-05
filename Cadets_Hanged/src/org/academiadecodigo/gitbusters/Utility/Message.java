@@ -9,4 +9,5 @@ public class Message {
     public final static String WAITING_FOR_PLAYER = "Waiting for player...";
     public final static String GUESSES_LEFT = " guesses left." ;
 
+
 }

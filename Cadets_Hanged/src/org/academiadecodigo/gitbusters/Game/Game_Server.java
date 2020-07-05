@@ -1,6 +1,8 @@
 package org.academiadecodigo.gitbusters.Game;
 
 import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.string.PasswordInputScanner;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.gitbusters.Player.Player;
 import org.academiadecodigo.gitbusters.Player.Player_Handler;
 import org.academiadecodigo.gitbusters.Utility.Message;
@@ -8,6 +10,9 @@ import org.academiadecodigo.gitbusters.Utility.Message;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,12 +23,18 @@ public class Game_Server {
     private int playerCount = 0;
     private String playerName;
     private Prompt prompt;
-    private final int nrOfPlayers = 2;
-    private static int ACTIVEPLAYERS = 1;
+
+    //mudei o nº de players porque o intellij ja é um player, (ver threads)
+    private final int nrOfPlayers = 1;
     private ExecutorService fixedPool;
 
+    //crio aqui uma arraylista do tipo player handler
+    private final List<Player_Handler> player_handlers = new ArrayList<Player_Handler>();
+
     public Game_Server() {
+        //abre a prompt e as threads,
         prompt = new Prompt(System.in, System.out);
+        //nºde players é 1, o intellij já está a ser executado na main thread, só o powershell é que precisa de outra thread
         fixedPool = Executors.newFixedThreadPool(nrOfPlayers);
     }
 
@@ -33,51 +44,50 @@ public class Game_Server {
     }
 
     public void start() throws IOException {
+
         ServerSocket serverSocket = null;
 
-        Game game = new Game(nrOfPlayers);
-
+        Game game = new Game();
         serverSocket = new ServerSocket(port);
         System.out.println(Message.SERVER_ON);
 
 
         //Waits for connection till client
-
-        while (ACTIVEPLAYERS <= 2) {
+        //podemos mudar o  true para algo mais bonito depois, mas já não tenho cabeça
+        while (true) {
 
             Socket clientSocket = serverSocket.accept();
 
+            // !!!! Crio os player handlers e damos add deles na Array list ( já lá vamos, venham comigo!!)
             Player_Handler playerHandler = new Player_Handler(clientSocket);
+            player_handlers.add(playerHandler);
 
-            Player player = new Player(ACTIVEPLAYERS, playerHandler);
-
+            //parabens , o player power shell ganhou a sua thread
             fixedPool.submit(playerHandler);
 
-            ACTIVEPLAYERS++;
 
-            player.getPlayerHandler().getOut().write(Message.NEW_CONNECTION + clientSocket.getInetAddress().getHostAddress() + "\n");
-            player.getPlayerHandler().getOut().flush();
+            //CHAMO O METODO CRATE PLAYER, vai criar o player e recebe a hander como argumento
+            game.createPlayer(nrOfPlayers, playerHandler);
 
-            if (player.getId() == 1) {
-
-                player.getPlayerHandler().getOut().write(Message.WELCOME + "\n");
-                player.getPlayerHandler().getOut().flush();
-
-                player.getPlayerHandler().getOut().write(Message.WAITING_FOR_PLAYER + "\n");
-                player.getPlayerHandler().getOut().flush();
-            }
-            if (player.getId() == 2) {
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            //se o  tamanho da nossa array de handlers for = a 1, o jogo realmente começa,
+            //se o tamanho da array for 1, quer dizer k ja esta la o handler da power shell e o do intellij
+            if (player_handlers.size() == 1) {
+                System.out.println("The Game will start!!!");
+                playerHandler.getOut().write("The Game will start!!! \n \n");
+                playerHandler.getOut().flush();
                 game.start();
             }
-        }
-        serverSocket.close();
 
-        ACTIVEPLAYERS = 1;
+            //ver o que fazer com isto depois
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
     }
 }
