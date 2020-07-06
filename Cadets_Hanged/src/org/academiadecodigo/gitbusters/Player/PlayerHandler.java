@@ -2,6 +2,7 @@ package org.academiadecodigo.gitbusters.Player;
 
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
+import org.academiadecodigo.gitbusters.Utility.Message;
 
 import java.io.*;
 import java.net.Socket;
@@ -21,7 +22,9 @@ public class PlayerHandler implements Runnable {
     public String pickChar() {
 
         StringInputScanner newChar = new StringInputScanner();
+        newChar.setMessage(Message.INSERT_LETTER);
         String playerChar = prompt.getUserInput(newChar);
+
 
         playerChar.charAt(0);
 

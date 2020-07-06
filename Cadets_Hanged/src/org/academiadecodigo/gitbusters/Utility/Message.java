@@ -12,7 +12,7 @@ public class Message {
     public final static String WORD_CHOSEN = "The chosen word is: ";
     public final static String OPPONENT_CHOSEN_WORD = "Your opponent has chosen the word ";
     public final static String HIFENS = "-------------------";
-    public final static String PICK_CHAR = "You may now choose 1 character: ";
+    public final static String PICK_CHAR = "You may now choose 1 character! ";
     public final static String WRONG_GUESS = "Wrong guess!!";
     public final static String GAME_OVER = "GAME OVER!!!!";
     public final static String GUESS_WORD = "Guess this word: ";
@@ -20,6 +20,8 @@ public class Message {
     public final static String YOU_WON = "Congratulations! You have won!";
     public final static String INVALID_GUESS = "Invalid Guess. Try Again...";
     public final static String DO_CHOICE = "Do your choice!";
+    public final static String LETTER_REPEAT = "You already guessed that letter..";
+    public final static String INSERT_LETTER = "Insert letter here: ";
 
 
 }

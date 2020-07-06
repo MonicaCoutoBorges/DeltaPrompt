@@ -9,6 +9,8 @@ import org.academiadecodigo.gitbusters.Utility.Message;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
 
@@ -18,6 +20,11 @@ public class Game {
     private int numberOfRounds = 0;
     private String chosenWord;
     private boolean isChosen = false;
+    private List<String> chosenLetters;
+
+    public Game() {
+        this.chosenLetters = new ArrayList<String>();
+    }
 
     public void start() throws IOException {
 
@@ -45,13 +52,23 @@ public class Game {
 
             firstPlayer.getPlayerHandler().sendMessageToPlayer(Message.PICK_CHAR + "\n");
 
-            String playerPickChar = firstPlayer.getPlayerHandler().pickChar() + "\n";
+            String playerPickChar = firstPlayer.getPlayerHandler().pickChar().toLowerCase() + "\n";
 
             char savingChar = playerPickChar.charAt(0);
 
-            if (playerPickChar.length() > 3) {
+            if (playerPickChar.length() > 3 || savingChar < 'a' || savingChar > 'z') {
                 firstPlayer.getPlayerHandler().sendMessageToPlayer(Message.INVALID_GUESS + "\n");
+                continue;
             }
+
+            if (!chosenLetters.contains(playerPickChar.substring(0,1))){
+                chosenLetters.add(playerPickChar.substring(0,1));
+            } else {
+                firstPlayer.getPlayerHandler().sendMessageToPlayer(Message.LETTER_REPEAT);
+                continue;
+            }
+
+
 
             if (!compareChars(savingChar)) {
 
