@@ -21,6 +21,7 @@ public class Game {
 
     public void start() throws IOException {
 
+        maxRounds = 6;
         Player hostGame = players[0];
         Player firstPlayer = players[1];
         PrintStream printStream = new PrintStream(hostGame.getPlayerHandler().getClientSocket().getOutputStream());
