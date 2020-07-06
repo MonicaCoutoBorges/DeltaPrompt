@@ -14,10 +14,10 @@ public class Message {
     public final static String WORD_CHOSEN= "The chosen word is: " ;
     public final static String OPPONENT_CHOSEN_WORD = "Your opponent has chosen the word " ;
     public final static String HIFFENS = "-------------------" ;
-    public final static String PICK_CHAR = "You may now choose 1 character." ;
+    public final static String PICK_CHAR = "You may now choose 1 character: " ;
     public final static String ALREADY_IN_USE = " already in use. " ;
-    public final static String G = " guesses left." ;
-    public final static String P = " guesses left." ;
+    public final static String WRONG_GUESS = "Wrong guess!!" ;
+    public final static String GAME_OVER = "GAME OVER!!!!" ;
     public final static String S = " guesses left." ;
     public final static String H = " guesses left." ;
     public final static String M = " guesses left." ;

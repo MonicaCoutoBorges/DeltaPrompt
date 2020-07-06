@@ -27,6 +27,11 @@ public class Player {
         playerHandler.getOut().flush();
     }
 
+    public void sendChar(char character) throws IOException {
+        playerHandler.getOut().write(character);
+        playerHandler.getOut().flush();
+    }
+
     public Player_Handler getPlayerHandler() {
         return playerHandler;
     }
@@ -34,6 +39,6 @@ public class Player {
 
     public String pickLetter(){
 
-        return playerHandler.pickChar(Message.PICK_CHAR + "/n");
+        return playerHandler.pickChar();
     }
 }

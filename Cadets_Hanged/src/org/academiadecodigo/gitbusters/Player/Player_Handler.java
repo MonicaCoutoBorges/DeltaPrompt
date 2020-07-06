@@ -41,13 +41,13 @@ public class Player_Handler implements Runnable {
     }
 
 
-    public String pickChar(String word) {
+    public String pickChar() {
 
         String newChar = "";
 
         try {
-            out.write(word);
-            out.flush();
+//            out.write(word);
+//            out.flush();
             newChar = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class Player_Handler implements Runnable {
     public void sendMessageToPlayer(String message) {
 
         try {
-            out.write(message);
+            out.write(message + "\n");
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
