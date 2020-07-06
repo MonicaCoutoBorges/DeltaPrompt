@@ -1,13 +1,17 @@
 package org.academiadecodigo.gitbusters.Game;
 
 import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.integer.IntegerInputScanner;
+import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.PasswordInputScanner;
 import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.gitbusters.Player.Player;
 import org.academiadecodigo.gitbusters.Player.Player_Handler;
 import org.academiadecodigo.gitbusters.Utility.Message;
 
+import java.awt.*;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -20,66 +24,60 @@ public class Game_Server {
 
     private final static int port = 8000;
     private int playerCount = 0;
-    private String playerName;
     private Prompt prompt;
-    //mudei o nº de players porque o intellij ja é um player, (ver threads)
     private final int nrOfPlayers = 1;
     private ExecutorService fixedPool;
-    //crio aqui uma arraylista do tipo player handler
     private final List<Player_Handler> player_handlers = new ArrayList<Player_Handler>();
+    private  ServerSocket serverSocket;
+    private Game game;
 
-    public Game_Server() {
-
-        //abre a prompt e as threads,
+    public Game_Server(Game game) {
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.game = game;
         prompt = new Prompt(System.in, System.out);
-        //nºde players é 1, o intellij já está a ser executado na main thread, só o powershell é que precisa de outra thread
         fixedPool = Executors.newFixedThreadPool(nrOfPlayers);
     }
-
     public static void main(String[] args) throws IOException {
+        Game game = new Game();
+        Game_Server game_server = new Game_Server(game);
 
-        Game_Server game_server = new Game_Server();
+        game_server.getHost();
         game_server.start();
     }
-
     public void start() throws IOException {
 
-        ServerSocket serverSocket = null;
-        Game game = new Game();
-        serverSocket = new ServerSocket(port);
         System.out.println(Message.HIFFENS);
         System.out.println(Message.SERVER_ON);
-        //Waits for connection till client
-        //podemos mudar o  true para algo mais bonito depois, mas já não tenho cabeça
 
         while (true) {
 
             Socket clientSocket = serverSocket.accept();
+
 
             System.out.println(Message.HIFFENS);
             System.out.println(Message.NEW_CONNECTION + clientSocket.getRemoteSocketAddress());
             System.out.println(Message.WELCOME);
             System.out.println(Message.HIFFENS);
 
-            // !!!! Crio os player handlers e damos add deles na Array list ( já lá vamos, venham comigo!!)
-            Player_Handler playerHandler = new Player_Handler(clientSocket);
+            PrintStream printStream = new PrintStream(clientSocket.getOutputStream());
+            prompt = new Prompt(clientSocket.getInputStream(), printStream);
+            Player_Handler playerHandler = new Player_Handler(clientSocket,prompt,printStream);
             player_handlers.add(playerHandler);
 
-            //parabens , o player power shell ganhou a sua thread
             fixedPool.submit(playerHandler);
+            game.playerMaker(1, playerHandler);
 
-            //CHAMO O METODO CRATE PLAYER, vai criar o player e recebe a hander como argumento
-            game.createPlayer(nrOfPlayers, playerHandler);
-
-            //se o  tamanho da nossa array de handlers for = a 1, o jogo realmente começa,
-            //se o tamanho da array for 1, quer dizer k ja esta la o handler da power shell e o do intellij
-            if (player_handlers.size() == 1) {
+            if (player_handlers.size() == 2) {
                 System.out.println(Message.GAME_WILL_START);
-                playerHandler.getOut().write(Message.GAME_WILL_START + " \n \n");
-                playerHandler.getOut().flush();
+                playerHandler.sendMessageToPlayer(Message.GAME_WILL_START + " \n \n");
+
                 game.start();
             }
-            //ver o que fazer com isto depois
+
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -87,4 +85,27 @@ public class Game_Server {
             }
         }
     }
+    public void getHost() throws IOException {
+        Socket hostSocket = serverSocket.accept();
+
+        PrintStream printStream = new PrintStream(hostSocket.getOutputStream());
+        Prompt hostPrompt = new Prompt(hostSocket.getInputStream(),printStream);
+
+        String[] menuOptions = {"Play", "Exit"};
+        MenuInputScanner scanner = new MenuInputScanner(menuOptions);
+        scanner.setMessage("Choose what you wanna do");
+        int menuOption = hostPrompt.getUserInput(scanner);
+
+        switch (menuOption){
+            case 1:
+                Player_Handler playerHandler = new Player_Handler(hostSocket,prompt,printStream);
+                player_handlers.add(playerHandler);
+                game.playerMaker(0, playerHandler);
+                break;
+            case 2:
+                hostSocket.isClosed();
+                break;
+        }
+    }
+
 }

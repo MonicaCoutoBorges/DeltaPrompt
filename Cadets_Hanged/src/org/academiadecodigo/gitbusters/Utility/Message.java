@@ -3,9 +3,7 @@ package org.academiadecodigo.gitbusters.Utility;
 public class Message {
 
     public final static String SERVER_ON = "Secret Russian server is now online!";
-    //Player has connected with address...
     public final static String NEW_CONNECTION = "Vladimir Putin has connected with address";
-    //del'ta palach igra
     public final static String WELCOME = "Welcome to дельта палач игра aKa Delta's Hangman Game!";
     public final static String WAITING_FOR_PLAYER = "Wait for your opponent...";
     public final static String GUESSES_LEFT = " guesses left." ;

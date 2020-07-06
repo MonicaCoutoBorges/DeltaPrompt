@@ -1,5 +1,7 @@
 package org.academiadecodigo.gitbusters.Player;
 
+import org.academiadecodigo.bootcamp.Prompt;
+import org.academiadecodigo.bootcamp.scanners.string.StringInputScanner;
 import org.academiadecodigo.gitbusters.Utility.Message;
 
 import java.io.*;
@@ -10,18 +12,14 @@ public class Player_Handler implements Runnable {
     private final Socket clientSocket;
     private BufferedReader in;
     private BufferedWriter out;
+    private PrintStream printStream;
+    private Prompt prompt;
 
-    public Player_Handler(Socket clientSocket) {
+
+    public Player_Handler(Socket clientSocket, Prompt prompt,PrintStream printStream) {
         this.clientSocket = clientSocket;
-
-        try {
-            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.prompt = prompt;
+        this.printStream = printStream;
 
     }
 
@@ -43,28 +41,17 @@ public class Player_Handler implements Runnable {
 
     public String pickChar() {
 
-        String newChar = "";
+        StringInputScanner newChar = new StringInputScanner();
+        String playerChar = prompt.getUserInput(newChar);
 
-        try {
-//            out.write(word);
-//            out.flush();
-            newChar = in.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        playerChar.charAt(0);
 
         System.out.println(newChar);
-        return newChar.toLowerCase();
+        return playerChar.toLowerCase();
     }
 
     public void sendMessageToPlayer(String message) {
-
-        try {
-            out.write(message + "\n");
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        printStream.println(message + "\n");
     }
 
     public BufferedReader getIn() {
@@ -75,10 +62,11 @@ public class Player_Handler implements Runnable {
         return out;
     }
 
-
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
 
     @Override
     public void run() {
-
     }
 }

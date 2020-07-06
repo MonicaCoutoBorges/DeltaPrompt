@@ -13,18 +13,12 @@ public class Player {
     private Prompt prompt;
     private Player_Handler playerHandler;
 
-    // tirei o id daqui, nao precisamos dele
     public Player(Player_Handler playerHandler) {
         this.playerHandler = playerHandler;
     }
 
-    //metodo para enviar menssagem ler o que vou meter em baixo com muita atençao
-    //ESTE METODO SO É USADO PARA MANDAR MENSSAGEM PARA A POWER SHELL,
-    //PARA MANDAR MENSSAGEM PARA O INTELLIJ PODIAMOS USAR SEMPRE A PROMPT!!!
-    //atençao, é só uma opinião
     public void sendMessage(String string) throws IOException {
-        playerHandler.getOut().write(string);
-        playerHandler.getOut().flush();
+        playerHandler.sendMessageToPlayer(string);
     }
 
     public void sendChar(char character) throws IOException {
@@ -36,9 +30,7 @@ public class Player {
         return playerHandler;
     }
 
-
     public String pickLetter(){
-
         return playerHandler.pickChar();
     }
 }
