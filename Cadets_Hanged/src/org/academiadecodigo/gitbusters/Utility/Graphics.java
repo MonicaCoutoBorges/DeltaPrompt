@@ -79,4 +79,8 @@ public enum Graphics {
     public static void incrementCounter(){
         counter++;
     }
+
+    public static void resetCounter(){
+        counter = 0;
+    }
 }

@@ -46,7 +46,11 @@ public class Game {
 
         while (maxRounds > 0) {
 
-            hangMaker(firstPlayer);
+            for (Graphics picture : Graphics.values()) {
+                if (Graphics.getCounter() == picture.getId()) {
+                    firstPlayer.getPlayerHandler().sendMessageToPlayer(picture.getPicture() + "\n");
+                }
+            }
             changeWordToChar(firstPlayer);
             printHiddenWord(firstPlayer);
 
@@ -148,16 +152,20 @@ public class Game {
 
     public void gameOver(Player player) throws IOException {
         if (maxRounds == 0) {
+            chosenLetters.clear();
             player.getPlayerHandler().sendMessageToPlayer(Message.GAME_OVER + "\n");
             player.getPlayerHandler().sendMessageToPlayer(Graphics.STEP6.getPicture() + "\n");
             System.out.println(Message.GAME_OVER);
+            Graphics.resetCounter();
             start();
         }
     }
 
     public void gameWon(Player player) throws IOException {
         if (checkWordIsComplete()) {
+            chosenLetters.clear();
             player.getPlayerHandler().sendMessageToPlayer(Message.YOU_WON + "\n");
+            Graphics.resetCounter();
             start();
         }
     }
